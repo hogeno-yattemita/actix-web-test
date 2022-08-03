@@ -1,8 +1,11 @@
+use std::{thread, time::Duration};
+
 use actix_web::{middleware::Logger, HttpResponse, Responder, get, HttpServer, App};
 
 
 #[get("/")]
 async fn index() -> impl Responder {
+    thread::sleep(Duration::from_secs(5));
     HttpResponse::Ok().body("Hello world!")
 }
 
