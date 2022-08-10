@@ -1,0 +1,38 @@
+version: "3"
+services:
+    rust:
+        build:
+            context: .
+            dockerfile: ./docker/rust/Dockerfile
+        tty: true
+        ports:
+            - "8080:8080"
+        # volumes:
+        #     - ./actix-http-test:/app
+        environment:
+            TZ: Asia/Tokyo
+        networks:
+            - "backend"
+    redis:
+        image: redis:latest
+        ports:
+            - "6379:6379"
+        networks:
+            - "backend"
+    mysql:
+        build: ./docker/mysql
+        ports:
+            - "3306:3306"
+        environment:
+            TZ: Asia/Tokyo
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: userdb1
+        volumes:
+            - ./docker/mysql/data:/var/lib/mysql
+            - ./docker/mysql/init:/docker-entrypoint-initdb.d
+        networks:
+            - "backend"
+networks:
+    backend:
+        name: backend
+        driver: bridge
